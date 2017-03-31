@@ -39,6 +39,7 @@ elif os.path.isfile('vcap-local.json'):
 # When running this app on the local machine, default the port to 8080
 port = int(os.getenv('PORT', 8080))
 
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -49,6 +50,8 @@ def home():
 # * 	"name": "Bob"
 # * }
 # */
+
+
 @app.route('/api/visitors', methods=['GET'])
 def get_visitor():
     if client:
@@ -77,7 +80,7 @@ def put_visitor():
         return 'Hello %s! I added you to the database.' % user
     else:
         print('No database')
-        return 'Hello %s!' % user
+        return 'Buenos dias %s!' % user
 
 @atexit.register
 def shutdown():
