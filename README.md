@@ -1,5 +1,7 @@
 # Getting Started with Python on Bluemix
 
+[![Build Status](https://travis-ci.org/JJGO/get-started-python.svg?branch=master)](https://travis-ci.org/JJGO/get-started-python)
+
 To get started, we'll take you through a sample Python Flask app, help you set up a development environment, deploy to Bluemix and add a Cloudant database.
 
 ## Prerequisites
