@@ -16,4 +16,4 @@ def test_ajax():
                             content_type='application/json'
                             )
     assert response.status_code == 200
-    assert b'Jose!' in response.data
+    assert b'Jose' in response.data
