@@ -5,6 +5,8 @@ import cf_deployment_tracker
 import os
 import json
 
+from watson_developer_cloud import LanguageTranslatorV2
+
 # Emit Bluemix deployment event
 cf_deployment_tracker.track()
 
@@ -24,16 +26,32 @@ if 'VCAP_SERVICES' in os.environ:
         url = 'https://' + creds['host']
         client = Cloudant(user, password, url=url, connect=True)
         db = client.create_database(db_name, throw_on_exists=False)
+
+        creds = vcap['services']['language_translator'][0]['credentials']
+        user = creds['username']
+        password = creds['password']
+        url = 'https://' + creds['host']
+        translator = LanguageTranslatorV2(user, password, url=url)
+
 elif os.path.isfile('vcap-local.json'):
     with open('vcap-local.json') as f:
         vcap = json.load(f)
         print('Found local VCAP_SERVICES')
-        creds = vcap['services']['cloudantNoSQLDB'][0]['credentials']
+        if 'cloudantNoSQLDB' in vcap['services']:
+            # cloudantNoSQLDB
+            creds = vcap['services']['cloudantNoSQLDB'][0]['credentials']
+            user = creds['username']
+            password = creds['password']
+            url = 'https://' + creds['host']
+            client = Cloudant(user, password, url=url, connect=True)
+            db = client.create_database(db_name, throw_on_exists=False)
+
+        creds = vcap['services']['language_translator'][0]['credentials']
         user = creds['username']
         password = creds['password']
         url = 'https://' + creds['host']
-        client = Cloudant(user, password, url=url, connect=True)
-        db = client.create_database(db_name, throw_on_exists=False)
+        translator = LanguageTranslatorV2(username=user, password=password, url=url)
+
 
 # On Bluemix, get the port number from the environment variable PORT
 # When running this app on the local machine, default the port to 8080
@@ -74,8 +92,11 @@ def get_visitor():
 @app.route('/api/visitors', methods=['POST'])
 def put_visitor():
     user = request.json['name']
+    # Translate
+    user = translator.translate(user, source='es', target='en')
+
     if client:
-        data = {'name':request.json['name']}
+        data = {'name': user}
         db.create_document(data)
         return 'Hello %s! I added you to the database.' % user
     else:
