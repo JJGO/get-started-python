@@ -52,7 +52,7 @@ elif os.path.isfile('vcap-local.json'):
         creds = vcap['services']['language_translator'][0]['credentials']
         user = creds['username']
         password = creds['password']
-        url = 'https://' + creds['url']
+        url = creds['url']
         translator = LanguageTranslatorV2(username=user, password=password, url=url)
 
 
@@ -96,11 +96,15 @@ def get_visitor():
 def put_visitor():
     user = request.json['name']
     # Translate
+    test = user.startswith('__')
+    if test:
+        user = user.strip('_')
     user = translator.translate(user, source='es', target='en')
 
     if client:
-        data = {'name': user}
-        db.create_document(data)
+        if not test:
+            data = {'name': user}
+            db.create_document(data)
         return 'Hello %s! I added you to the database.' % user
     else:
         print('No database')
