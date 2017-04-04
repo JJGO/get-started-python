@@ -15,6 +15,7 @@ app = Flask(__name__)
 db_name = 'mydb'
 client = None
 db = None
+translator = None
 
 if 'VCAP_SERVICES' in os.environ:
     vcap = json.loads(os.getenv('VCAP_SERVICES'))
