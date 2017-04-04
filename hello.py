@@ -27,11 +27,13 @@ if 'VCAP_SERVICES' in os.environ:
         client = Cloudant(user, password, url=url, connect=True)
         db = client.create_database(db_name, throw_on_exists=False)
 
-        creds = vcap['services']['language_translator'][0]['credentials']
+        creds = vcap['language_translator'][0]['credentials']
         user = creds['username']
         password = creds['password']
-        url = 'https://' + creds['host']
-        translator = LanguageTranslatorV2(user, password, url=url)
+        # url = 'https://' + creds['url']
+        url = creds['url']
+        print(user, password, url)
+        translator = LanguageTranslatorV2(username=user, password=password, url=url)
 
 elif os.path.isfile('vcap-local.json'):
     with open('vcap-local.json') as f:
@@ -49,7 +51,7 @@ elif os.path.isfile('vcap-local.json'):
         creds = vcap['services']['language_translator'][0]['credentials']
         user = creds['username']
         password = creds['password']
-        url = 'https://' + creds['host']
+        url = 'https://' + creds['url']
         translator = LanguageTranslatorV2(username=user, password=password, url=url)
 
 
