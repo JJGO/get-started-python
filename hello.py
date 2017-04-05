@@ -12,7 +12,7 @@ cf_deployment_tracker.track()
 
 app = Flask(__name__)
 
-db_name = 'mydb'
+db_name = 'mydb_translate'
 client = None
 db = None
 translator = None
@@ -95,6 +95,7 @@ def get_visitor():
 @app.route('/api/visitors', methods=['POST'])
 def put_visitor():
     user = request.json['name']
+    original = user
     # Translate
     test = user.startswith('__')
     if test:
@@ -105,7 +106,7 @@ def put_visitor():
         if not test:
             data = {'name': user}
             db.create_document(data)
-        return 'Hello %s! I added you to the database.' % user
+        return 'La traduccion de {0} es {1}'.format(original, user)
     else:
         print('No database')
         return 'Buenos dias %s!' % user
