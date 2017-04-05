@@ -3,3 +3,5 @@ applications:
  - name: asrp11
    random-route: false
    memory: 128M
+   services:
+   - Cloudant NoSQL DB-xf
