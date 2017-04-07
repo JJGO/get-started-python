@@ -61,6 +61,8 @@ target/
 # Mac files
 *.DS_Store
 
-vcap-local.json
+# vcap-local.json
 
 .python-version
+
+crypt-key
